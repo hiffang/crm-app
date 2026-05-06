@@ -23,21 +23,24 @@ export async function GET() {
   }
 
   const totalLeads = await prisma.lead.count();
-  const statusCounts = await Promise.all(
-    STATUSES.map(async (status) => ({
-      status,
-      count: await prisma.lead.count({ where: { status } }),
-    }))
-  );
+  const statusCounts: Array<{ status: string; count: number }> =
+    await Promise.all(
+      STATUSES.map(async (status) => ({
+        status,
+        count: await prisma.lead.count({ where: { status } }),
+      }))
+    );
 
-  const totalValue = await prisma.lead.aggregate({
-    _sum: { dealValue: true },
-  });
+  const totalValue: { _sum: { dealValue: number | null } } =
+    await prisma.lead.aggregate({
+      _sum: { dealValue: true },
+    });
 
-  const wonValue = await prisma.lead.aggregate({
-    _sum: { dealValue: true },
-    where: { status: "Won" },
-  });
+  const wonValue: { _sum: { dealValue: number | null } } =
+    await prisma.lead.aggregate({
+      _sum: { dealValue: true },
+      where: { status: "Won" },
+    });
 
   return NextResponse.json({
     totalLeads,

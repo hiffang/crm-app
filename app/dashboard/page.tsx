@@ -43,12 +43,13 @@ const formatDate = (value: Date) =>
 
 export default async function DashboardPage() {
   const totalLeads = await prisma.lead.count();
-  const statusCounts = await Promise.all(
-    STATUSES.map(async (status) => ({
-      status,
-      count: await prisma.lead.count({ where: { status } }),
-    }))
-  );
+  const statusCounts: Array<{ status: string; count: number }> =
+    await Promise.all(
+      STATUSES.map(async (status) => ({
+        status,
+        count: await prisma.lead.count({ where: { status } }),
+      }))
+    );
   const totalValue = await prisma.lead.aggregate({
     _sum: { dealValue: true },
   });
@@ -56,9 +57,10 @@ export default async function DashboardPage() {
     _sum: { dealValue: true },
     where: { status: "Won" },
   });
-  const sourceRows = await prisma.lead.findMany({
-    select: { source: true, dealValue: true },
-  });
+  const sourceRows: Array<{ source: string; dealValue: number | null }> =
+    await prisma.lead.findMany({
+      select: { source: true, dealValue: true },
+    });
   const sources: Array<{ source: string; _sum: { dealValue: number } }> =
     Object.entries(
       sourceRows.reduce<Record<string, number>>(
@@ -72,17 +74,27 @@ export default async function DashboardPage() {
         {}
       )
     )
-      .map(([source, total]) => ({ source, _sum: { dealValue: total } }))
+      .map(([source, total]) => ({ source, _sum: { dealValue: Number(total) } }))
       .sort((a, b) => b._sum.dealValue - a._sum.dealValue);
-  const recentLeads = await prisma.lead.findMany({
+  const recentLeads: Array<{
+    id: string;
+    name: string;
+    company: string;
+    status: string;
+    dealValue: number;
+    createdAt: Date;
+  }> = await prisma.lead.findMany({
     orderBy: { createdAt: "desc" },
     take: 5,
   });
 
-  const statusMap = statusCounts.reduce<Record<string, number>>((acc, item) => {
-    acc[item.status] = item.count;
-    return acc;
-  }, {});
+  const statusMap = statusCounts.reduce<Record<string, number>>(
+    (acc, item) => {
+      acc[item.status] = item.count;
+      return acc;
+    },
+    {}
+  );
 
   const maxStatusCount = Math.max(1, ...statusCounts.map((item) => item.count));
   const maxSourceValue = Math.max(
