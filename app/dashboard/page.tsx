@@ -59,20 +59,21 @@ export default async function DashboardPage() {
   const sourceRows = await prisma.lead.findMany({
     select: { source: true, dealValue: true },
   });
-  const sources = Object.entries(
-    sourceRows.reduce<Record<string, number>>(
-      (
-        acc: Record<string, number>,
-        row: { source: string; dealValue: number }
-      ) => {
-      acc[row.source] = (acc[row.source] ?? 0) + (row.dealValue ?? 0);
-      return acc;
-      },
-      {}
+  const sources: Array<{ source: string; _sum: { dealValue: number } }> =
+    Object.entries(
+      sourceRows.reduce<Record<string, number>>(
+        (
+          acc: Record<string, number>,
+          row: { source: string; dealValue: number | null }
+        ) => {
+          acc[row.source] = (acc[row.source] ?? 0) + (row.dealValue ?? 0);
+          return acc;
+        },
+        {}
+      )
     )
-  )
-    .map(([source, total]) => ({ source, _sum: { dealValue: total } }))
-    .sort((a, b) => (b._sum.dealValue ?? 0) - (a._sum.dealValue ?? 0));
+      .map(([source, total]) => ({ source, _sum: { dealValue: total } }))
+      .sort((a, b) => b._sum.dealValue - a._sum.dealValue);
   const recentLeads = await prisma.lead.findMany({
     orderBy: { createdAt: "desc" },
     take: 5,
