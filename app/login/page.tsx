@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import LoginForm from "./login-form";
 
 export default function LoginPage() {
@@ -14,7 +16,9 @@ export default function LoginPage() {
           </p>
         </div>
         <div className="mt-8">
-          <LoginForm />
+          <Suspense fallback={<div className="text-sm text-slate-500">Loading form...</div>}>
+            <LoginForm />
+          </Suspense>
         </div>
         <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-600">
           <p className="font-semibold text-slate-700">Test account</p>
