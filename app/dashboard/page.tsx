@@ -60,10 +60,13 @@ export default async function DashboardPage() {
     select: { source: true, dealValue: true },
   });
   const sources = Object.entries(
-    sourceRows.reduce<Record<string, number>>((acc, row) => {
+    sourceRows.reduce<Record<string, number>>(
+      (acc: Record<string, number>, row) => {
       acc[row.source] = (acc[row.source] ?? 0) + (row.dealValue ?? 0);
       return acc;
-    }, {})
+      },
+      {}
+    )
   )
     .map(([source, total]) => ({ source, _sum: { dealValue: total } }))
     .sort((a, b) => (b._sum.dealValue ?? 0) - (a._sum.dealValue ?? 0));
