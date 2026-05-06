@@ -61,7 +61,10 @@ export default async function DashboardPage() {
   });
   const sources = Object.entries(
     sourceRows.reduce<Record<string, number>>(
-      (acc: Record<string, number>, row) => {
+      (
+        acc: Record<string, number>,
+        row: { source: string; dealValue: number }
+      ) => {
       acc[row.source] = (acc[row.source] ?? 0) + (row.dealValue ?? 0);
       return acc;
       },
