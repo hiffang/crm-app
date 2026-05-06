@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Prisma } from "@prisma/client";
 
 import AppShell from "@/app/components/AppShell";
 import LeadRowActions from "@/app/leads/lead-row-actions";
@@ -70,7 +69,7 @@ export default async function LeadsPage({
       ? resolvedSearchParams.search
       : "";
 
-  const where: Prisma.LeadWhereInput = {};
+  const where: Record<string, unknown> = {};
 
   if (status) {
     where.status = status;

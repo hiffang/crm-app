@@ -1,7 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { Prisma } from "@prisma/client";
 
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
@@ -51,7 +50,7 @@ export async function PATCH(
   const { id } = await params;
   const body = await request.json();
 
-  const data: Prisma.LeadUpdateInput = {};
+  const data: Record<string, unknown> = {};
 
   if (body.name !== undefined) data.name = String(body.name).trim();
   if (body.company !== undefined) data.company = String(body.company).trim();
