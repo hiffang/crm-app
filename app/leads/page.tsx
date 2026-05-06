@@ -141,7 +141,7 @@ export default async function LeadsPage({
               defaultValue={status}
             >
               <option value="">Status</option>
-              {STATUS_OPTIONS.map((option) => (
+              {STATUS_OPTIONS.map((option: string) => (
                 <option key={option} value={option}>
                   {option}
                 </option>
@@ -153,7 +153,7 @@ export default async function LeadsPage({
               defaultValue={source}
             >
               <option value="">Lead source</option>
-              {sources.map((item) => (
+              {sources.map((item: { source: string }) => (
                 <option key={item.source} value={item.source}>
                   {item.source}
                 </option>
@@ -165,7 +165,7 @@ export default async function LeadsPage({
               defaultValue={assignedTo}
             >
               <option value="">Assigned salesperson</option>
-              {users.map((user) => (
+              {users.map((user: { id: string; name: string | null; email: string }) => (
                 <option key={user.id} value={user.id}>
                   {user.name ?? "Unnamed"}
                 </option>
@@ -190,7 +190,7 @@ export default async function LeadsPage({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
-                {leads.map((lead) => (
+                {leads.map((lead: typeof leads[number]) => (
                   <tr key={lead.id} className="bg-white hover:bg-slate-50">
                     <td className="px-6 py-4 font-semibold text-slate-900">
                       {lead.name}

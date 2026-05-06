@@ -74,8 +74,8 @@ export default async function DashboardPage() {
         {}
       )
     )
-      .map(([source, total]) => ({ source, _sum: { dealValue: Number(total) } }))
-      .sort((a, b) => b._sum.dealValue - a._sum.dealValue);
+      .map(([source, total]: [string, number]) => ({ source, _sum: { dealValue: Number(total) } }))
+      .sort((a: { source: string; _sum: { dealValue: number } }, b: { source: string; _sum: { dealValue: number } }) => b._sum.dealValue - a._sum.dealValue);
   const recentLeads: Array<{
     id: string;
     name: string;
@@ -89,17 +89,17 @@ export default async function DashboardPage() {
   });
 
   const statusMap = statusCounts.reduce<Record<string, number>>(
-    (acc, item) => {
+    (acc, item: { status: string; count: number }) => {
       acc[item.status] = item.count;
       return acc;
     },
     {}
   );
 
-  const maxStatusCount = Math.max(1, ...statusCounts.map((item) => item.count));
+  const maxStatusCount = Math.max(1, ...statusCounts.map((item: { status: string; count: number }) => item.count));
   const maxSourceValue = Math.max(
     1,
-    ...sources.map((item) => item._sum.dealValue ?? 0)
+    ...sources.map((item: { source: string; _sum: { dealValue: number } }) => item._sum.dealValue ?? 0)
   );
 
   return (
@@ -184,7 +184,7 @@ export default async function DashboardPage() {
               <span className="text-xs text-slate-500">Count</span>
             </div>
             <div className="mt-6 space-y-4">
-              {statusCounts.map((item) => (
+              {statusCounts.map((item: { status: string; count: number }) => (
                 <div key={item.status}>
                   <div className="flex items-center justify-between text-sm text-slate-600">
                     <span>{item.status}</span>
@@ -214,7 +214,7 @@ export default async function DashboardPage() {
               <span className="text-xs text-slate-500">Value</span>
             </div>
             <div className="mt-6 space-y-4">
-              {sources.map((item) => (
+              {sources.map((item: { source: string; _sum: { dealValue: number } }) => (
                 <div key={item.source}>
                   <div className="flex items-center justify-between text-sm text-slate-600">
                     <span>{item.source}</span>

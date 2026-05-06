@@ -173,7 +173,7 @@ export default function LeadForm({
             value={status}
             onChange={(event) => setStatus(event.target.value)}
           >
-            {STATUS_OPTIONS.map((option) => (
+            {STATUS_OPTIONS.map((option: string) => (
               <option key={option} value={option}>
                 {option}
               </option>
@@ -188,7 +188,7 @@ export default function LeadForm({
             onChange={(event) => setAssignedToId(event.target.value)}
             required
           >
-            {users.map((user) => (
+            {users.map((user: LeadFormUser) => (
               <option key={user.id} value={user.id}>
                 {user.name ?? "Unnamed"} ({user.email})
               </option>

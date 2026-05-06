@@ -6,7 +6,7 @@ type UserAvatarProps = {
 const getInitials = (name?: string | null, email?: string | null) => {
   if (name) {
     const parts = name.trim().split(/\s+/).slice(0, 2);
-    return parts.map((part) => part[0]?.toUpperCase()).join("");
+    return parts.map((part: string) => part[0]?.toUpperCase()).join("");
   }
 
   if (email) {

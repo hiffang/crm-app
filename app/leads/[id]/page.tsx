@@ -130,7 +130,7 @@ export default async function LeadDetailPage({
                   No notes yet. Add the first touchpoint.
                 </p>
               ) : (
-                lead.notes.map((note) => (
+                lead.notes.map((note: (typeof lead.notes)[number]) => (
                   <div
                     key={note.id}
                     className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
