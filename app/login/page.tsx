@@ -6,7 +6,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md rounded-3xl border border-slate-200/80 bg-white p-10 shadow-[0_30px_120px_-60px_rgba(15,23,42,0.7)]">
         <div className="space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-amber-300">
-            Atlas CRM
+            Torch CRM
           </div>
           <h1 className="text-3xl font-semibold text-slate-900">Sign in</h1>
           <p className="text-sm text-slate-600">

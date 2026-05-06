@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 
 import AppShell from "@/app/components/AppShell";
 import LeadRowActions from "@/app/leads/lead-row-actions";
+import FiltersForm from "@/app/leads/filters-form";
 import prisma from "@/lib/prisma";
 
 const STATUS_OPTIONS = [
@@ -85,9 +86,9 @@ export default async function LeadsPage({
 
   if (search) {
     where.OR = [
-      { name: { contains: search, mode: "insensitive" } },
-      { company: { contains: search, mode: "insensitive" } },
-      { email: { contains: search, mode: "insensitive" } },
+      { name: { contains: search } },
+      { company: { contains: search } },
+      { email: { contains: search } },
     ];
   }
 
@@ -127,7 +128,7 @@ export default async function LeadsPage({
         </header>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <form className="grid gap-4 md:grid-cols-4" method="GET">
+          <FiltersForm>
             <input
               className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm"
               placeholder="Search name, company, email"
@@ -171,7 +172,7 @@ export default async function LeadsPage({
                 </option>
               ))}
             </select>
-          </form>
+          </FiltersForm>
         </section>
 
         <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
