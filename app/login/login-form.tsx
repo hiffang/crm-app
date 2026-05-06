@@ -83,7 +83,7 @@ export default function LoginForm() {
         </p>
       ) : null}
       <button
-        className="flex w-full items-center justify-center rounded-2xl bg-amber-400 px-4 py-3 text-sm font-semibold uppercase tracking-[0.25em] text-slate-900 shadow-lg transition hover:-translate-y-0.5 hover:bg-amber-300"
+        className="flex w-full items-center justify-center rounded-2xl bg-amber-400 px-4 py-3 text-sm font-semibold uppercase tracking-[0.25em] text-slate-900 shadow-lg transition hover:-translate-y-0.5 hover:bg-amber-300 cursor-pointer"
         type="submit"
         disabled={loading}
       >
