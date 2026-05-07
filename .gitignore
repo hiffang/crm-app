@@ -25,6 +25,7 @@
 *.pem
 AGENTS.md
 CLAUDE.md
+reflection.md
 
 # debug
 npm-debug.log*
