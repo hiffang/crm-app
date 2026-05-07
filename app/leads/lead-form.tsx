@@ -47,7 +47,7 @@ export default function LeadForm({
   const [status, setStatus] = useState(lead?.status ?? "New");
   const [dealValue, setDealValue] = useState(String(lead?.dealValue ?? 0));
   const [assignedToId, setAssignedToId] = useState(
-    lead?.userId ?? users[0]?.id ?? ""
+    lead?.userId ?? users[0]?.id ?? "",
   );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -66,7 +66,7 @@ export default function LeadForm({
       dealValue: Number(dealValue || 0),
       assignedToId,
     }),
-    [name, company, email, phone, source, status, dealValue, assignedToId]
+    [name, company, email, phone, source, status, dealValue, assignedToId],
   );
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -147,13 +147,19 @@ export default function LeadForm({
         </label>
         <label className="space-y-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
           Lead source
-          <input
+          <select
             className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900"
             value={source}
             onChange={(event) => setSource(event.target.value)}
-            placeholder="Website, Referral, Event"
             required
-          />
+          >
+            <option value="">Select a source</option>
+            <option value="Website">Website</option>
+            <option value="LinkedIn">LinkedIn</option>
+            <option value="Referral">Referral</option>
+            <option value="Cold Email">Cold Email</option>
+            <option value="Event">Event</option>
+          </select>
         </label>
         <label className="space-y-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
           Estimated deal value

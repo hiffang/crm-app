@@ -26,6 +26,7 @@
 AGENTS.md
 CLAUDE.md
 reflection.md
+dev.db
 
 # debug
 npm-debug.log*

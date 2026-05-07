@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/leads", label: "Leads" },
-  { href: "/settings", label: "Settings" },
 ];
 
 export default function SidebarNav() {
