@@ -27,8 +27,11 @@ export const authOptions: NextAuthOptions = {
 
         const passwordMatches = await bcrypt.compare(
           credentials.password,
-          user.password
+          user.password,
         );
+
+        console.log("Password match result:", passwordMatches);
+        console.log("User found:", user.email);
 
         if (!passwordMatches) {
           return null;
