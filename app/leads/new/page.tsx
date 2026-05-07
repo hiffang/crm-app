@@ -2,6 +2,8 @@ import AppShell from "@/app/components/AppShell";
 import LeadForm from "@/app/leads/lead-form";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function NewLeadPage() {
   const users = await prisma.user.findMany({
     select: { id: true, name: true, email: true },

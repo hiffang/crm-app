@@ -4,6 +4,8 @@ import AppShell from "@/app/components/AppShell";
 import LeadForm from "@/app/leads/lead-form";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function EditLeadPage({
   params,
 }: {

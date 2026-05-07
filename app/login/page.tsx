@@ -2,6 +2,8 @@ import { Suspense } from "react";
 
 import LoginForm from "./login-form";
 
+export const dynamic = "force-dynamic";
+
 export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,_#1e293b,_transparent_55%),radial-gradient(circle_at_bottom,_#0f172a,_transparent_60%)] px-6 py-16">
