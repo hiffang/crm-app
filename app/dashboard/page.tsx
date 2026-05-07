@@ -1,6 +1,8 @@
 import AppShell from "@/app/components/AppShell";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 const STATUSES = [
   "New",
   "Contacted",

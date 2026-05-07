@@ -136,7 +136,6 @@ app/
 ├── dashboard/                # Dashboard page
 ├── leads/                    # Lead list, detail, create, edit pages
 ├── login/                    # Login page
-└── settings/                 # Settings page
 lib/
 ├── auth.ts                   # NextAuth configuration
 └── prisma.ts                 # Prisma client singleton

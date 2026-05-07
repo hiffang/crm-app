@@ -7,6 +7,8 @@ import NoteForm from "@/app/leads/[id]/note-form";
 import StatusSelect from "@/app/leads/[id]/status-select";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 const currency = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",

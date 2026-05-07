@@ -5,6 +5,8 @@ import LeadRowActions from "@/app/leads/lead-row-actions";
 import FiltersForm from "@/app/leads/filters-form";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 const STATUS_OPTIONS = [
   "New",
   "Contacted",
