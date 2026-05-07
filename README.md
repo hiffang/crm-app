@@ -10,7 +10,9 @@ A lightweight lead management system built for small sales teams. Torch CRM lets
 |---|---|
 | Framework | Next.js 15 (App Router) |
 | Language | TypeScript |
-| Database | SQLite (via Prisma ORM) |
+| Database | PostgreSQL (Supabase) |
+| ORM | Prisma 7 |
+| Database Adapter | `@prisma/adapter-pg` |
 | Authentication | NextAuth.js (credentials + JWT) |
 | Styling | Tailwind CSS |
 
@@ -51,10 +53,10 @@ cp .env.example .env
 
 Open `.env` and fill in the values (see Environment Variables below).
 
-**4. Run database migrations**
+**4. Push the schema to your database**
 
 ```bash
-npx prisma migrate dev --name init
+npx prisma db push
 ```
 
 **5. Seed the database**
@@ -78,7 +80,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 Create a `.env` file at the project root with the following values:
 
 ```
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://postgres.[ref]:[password]@aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres"
+DIRECT_URL="postgresql://postgres.[ref]:[password]@aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres"
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-random-secret-here"
 ```
@@ -88,6 +91,13 @@ To generate a secure `NEXTAUTH_SECRET`, run:
 ```bash
 openssl rand -base64 32
 ```
+
+### Getting Your Supabase URLs
+
+1. Go to [supabase.com](https://supabase.com) and create a free project
+2. Navigate to **Settings → Database**
+3. Under **Connection string**, copy the **URI** for `DATABASE_URL` (port 6543)
+4. Under **Direct connection**, copy the URI for `DIRECT_URL` (port 5432)
 
 ---
 
@@ -102,23 +112,49 @@ Password: password123
 
 ## Database Setup
 
-The app uses Prisma with SQLite for local development. The database is stored as a single file (`dev.db`) in the project root.
-
-The schema is defined in `prisma/schema.prisma` and includes three models:
+The app uses Prisma 7 with PostgreSQL via Supabase. The schema is defined in `prisma/schema.prisma` and includes three models:
 
 - `User` — stores salesperson accounts
 - `Lead` — stores lead records with all pipeline fields
 - `Note` — stores internal notes linked to a lead and author
 
-After running `prisma migrate dev`, the database file is created automatically. Running `prisma db seed` populates it with one admin user and three sample leads.
-
-**Useful Prisma commands:**
+**Initial setup:**
 
 ```bash
-npx prisma studio          # Browse the database in a UI
-npx prisma migrate reset   # Wipe and re-run all migrations
-npx prisma db seed         # Re-seed sample data
+npx prisma db push       # Push schema to your database
+npx prisma db seed       # Create admin user and sample leads
 ```
+
+**Other useful commands:**
+
+```bash
+npx prisma studio        # Browse the database in a UI
+npx prisma db push       # Sync schema changes to the database
+npx prisma db seed       # Re-seed sample data
+```
+
+---
+
+## Deploying to Vercel
+
+**1. Push your code to a public GitHub repository**
+
+**2. Import the project on [vercel.com](https://vercel.com)**
+
+**3. Add the following environment variables in Vercel → Settings → Environment Variables:**
+
+| Name | Value |
+|---|---|
+| `DATABASE_URL` | Your Supabase pooler URL (port 6543) |
+| `DIRECT_URL` | Your Supabase direct URL (port 5432) |
+| `NEXTAUTH_URL` | Your Vercel app URL e.g. `https://your-app.vercel.app` |
+| `NEXTAUTH_SECRET` | A long random string (generate with `openssl rand -base64 32`) |
+
+> Important: `NEXTAUTH_URL` must not have a trailing slash.
+
+**4. Redeploy**
+
+Vercel will automatically run `prisma generate` via the `postinstall` script during the build.
 
 ---
 
@@ -135,10 +171,10 @@ app/
 ├── components/               # Shared UI components
 ├── dashboard/                # Dashboard page
 ├── leads/                    # Lead list, detail, create, edit pages
-├── login/                    # Login page
+└── login/                    # Login page
 lib/
 ├── auth.ts                   # NextAuth configuration
-└── prisma.ts                 # Prisma client singleton
+└── prisma.ts                 # Prisma client singleton with pg adapter
 prisma/
 ├── schema.prisma             # Database schema
 └── seed.ts                   # Seed script
@@ -148,9 +184,8 @@ prisma/
 
 ## Known Limitations
 
-- SQLite works well for local development but is not suitable for a deployed multi-user environment. A production deployment should use PostgreSQL or MySQL via a hosted provider such as Supabase or PlanetScale.
 - There is currently no role-based access control. Any authenticated user can edit or delete any lead.
-- The lead source field accepts free text input. A future improvement would be to enforce a fixed dropdown of sources for cleaner filtering and reporting.
+- Adding more users requires manually inserting them into the database via Supabase's SQL Editor or Prisma Studio.
 - No email notifications or reminders are implemented.
 
 ---
@@ -159,7 +194,7 @@ prisma/
 
 The main goal of this project was to build a CRM that reflects how a real sales team would actually use one — not just a CRUD demo. That meant focusing on the workflow: a lead has a status, an assigned owner, a source, and a running log of notes from calls and follow-ups.
 
-The most interesting technical challenge was handling Next.js 15's async `params` in dynamic route segments, which is a change from earlier versions. Another decision worth noting is using server components for the leads list and dashboard pages — data is fetched directly from Prisma on the server rather than via client-side fetch calls, which keeps the data always fresh without needing client state management.
+The most interesting technical challenge was working with Prisma 7, which introduced breaking changes to how database connections are configured — URLs must now be passed via a driver adapter rather than directly in the schema file. Migrating to PostgreSQL on Supabase for production also required careful handling of connection pooling versus direct connections, and understanding why `export const dynamic = "force-dynamic"` is necessary on data pages to prevent Next.js from attempting to pre-render them at build time before the database is reachable.
 
 If I were to extend this further, I would add a Kanban view for the pipeline, lead aging indicators for stale leads, and a CSV export for reporting.
 
@@ -171,4 +206,4 @@ If I were to extend this further, I would add a Kanban view for the pipeline, le
 
 ## Deployed Application
 
-[https://crm-app-five-psi.vercel.app/](https://crm-app-five-psi.vercel.app/)
+[https://crm-app-five-psi.vercel.app](https://crm-app-five-psi.vercel.app)
